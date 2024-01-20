@@ -1,29 +1,61 @@
 html, body {
-    height: 100%;
+    /*height: 100%;*/
     margin: 0;
     padding: 0;
-    background-color: #f7f7f7; /* or your chosen background color */
+    background-color: #f0f0f0; /* Slightly darker shade for the background */
 }
 
 #gameContainer {
     display: grid;
-    width: 100%;
-    height: 100%;
-    grid-template-columns: repeat(auto-fill, minmax(20px, 1fr));
-    grid-auto-rows: 20px; /* Make this the same as minmax's first value */
+    grid-template-columns: repeat(20, 20px); /* 20 columns, each 20px wide */
+    grid-auto-rows: 20px; /* Each row 20px high */
     grid-gap: 2px;
+    justify-content: center;
+    align-content: center;
+    margin-bottom: 20px; /* Adds space between the grid and the counters */
+}
+
+.content {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Arial', sans-serif; /* Example: Arial, but you can choose any */
+}
+
+h1 {
+    font-size: 2em;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+.infoPanel {
+    display: flex;
+    flex-direction: column; /* Stack items vertically */
+    align-items: center; /* Center align items */
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #eef2f3;
+    border-radius: 10px;
+}
+
+#turnCountDisplay, #clickCountDisplay {
+    font-size: 1.2em;
+    color: #555;
+    margin: 5px 0; /* Adds vertical space between counters */
 }
 
 .cell {
     width: 100%;
     padding-top: 100%; /* This maintains the aspect ratio */
-    position: relative;
-    background-color: #fafafa; /* Very light grey for dead cells */
+    background-color: #ffffff; /* Pure white for dead cells */
+    border: 1px solid #e0e0e0; /* Light grey border for better cell definition */
     border-radius: 5px; /* Optional: adds rounded corners for a softer look */
 }
 
 .cell.alive {
-    background-color: #a8d5e2; /* Soft blue, consider other pastel colors */
+    background-color: #b8e1f4; /* A slightly more vibrant shade of blue */
 }
 
 button {
@@ -35,16 +67,17 @@ button {
     border-radius: 8px;
     cursor: pointer;
     font-size: 16px;
+    margin-top: 20px; /* Add some space between the grid and the button */
 }
 
 button:hover {
     background-color: #d0d0d0; /* Slightly darker grey on hover */
 }
 
-@media (max-width: 600px) {
+/*@media (max-width: 600px) {
     #gameContainer {
         grid-template-columns: repeat(auto-fill, minmax(10px, 1fr));
         grid-auto-rows: 10px;
     }
-}
+}*/
 

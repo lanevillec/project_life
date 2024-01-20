@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const gridSize = 10; // 10x10 grid for simplicity
+    const gridSize = 20;
     let grid = createGridArray(gridSize);
     let gameInterval = null; // Global variable to store the interval ID
     const container = document.getElementById('gameContainer');
@@ -11,7 +11,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let y = index % gridSize;
         grid[x][y] = !grid[x][y]; // Toggle cell state
         updateDisplay();
+        updateClickCount(); // Add this line to update the click count
     };
+    
 
     // Initialize grid display
     for (let i = 0; i < gridSize * gridSize; i++) {
@@ -77,7 +79,24 @@ document.addEventListener('DOMContentLoaded', () => {
 
         grid = newGrid;
         updateDisplay();
+        updateTurnCount(); // Update the turn count each time the game state updates
+
+        // Check if the grid is empty
+        if (isGridEmpty()) {
+            console.log("Grid is empty"); // For debugging
+            clearInterval(gameInterval);
+            gameInterval = null;
+            gameStateButton.textContent = 'Start';
+            alert("Game Over! The grid is empty.");
+        }
+
+        
     }
+
+    function isGridEmpty() {
+        return grid.every(row => row.every(cell => cell === false));
+    }
+    
 
     // Count alive neighbors
     function countAliveNeighbors(x, y) {
@@ -94,23 +113,85 @@ document.addEventListener('DOMContentLoaded', () => {
         return count;
     }
 
-    // Multi-state button
-    let gameStateButton = document.createElement('button');
-    gameStateButton.textContent = 'Start';
-    document.body.appendChild(gameStateButton);
-
-    gameStateButton.addEventListener('click', () => {
-        if (gameStateButton.textContent === 'Start') {
+    const startPauseButton = document.getElementById('startPauseButton');
+    startPauseButton.addEventListener('click', () => {
+        if (startPauseButton.textContent === 'Start') {
             gameInterval = setInterval(updateGameState, 200); // Start the game
-            gameStateButton.textContent = 'Pause';
-        } else if (gameStateButton.textContent === 'Pause') {
+            startPauseButton.textContent = 'Pause';
+        } else if (startPauseButton.textContent === 'Pause') {
             clearInterval(gameInterval); // Pause the game
             gameInterval = null;
-            gameStateButton.textContent = 'Resume';
-        } else if (gameStateButton.textContent === 'Resume') {
+            startPauseButton.textContent = 'Resume';
+        } else if (startPauseButton.textContent === 'Resume') {
             gameInterval = setInterval(updateGameState, 200); // Resume the game
-            gameStateButton.textContent = 'Pause';
+            startPauseButton.textContent = 'Pause';
         }
     });
+
+    const resetButton = document.getElementById('resetButton');
+    resetButton.addEventListener('click', () => {
+        // Stop the game if it's running
+        if (gameInterval) {
+            clearInterval(gameInterval);
+            gameInterval = null;
+        }
+    
+        resetGrid();
+        resetClickCount();
+        resetTurnCount();
+    
+        // Reset the Start/Pause/Resume button text to 'Start'
+        gameStateButton.textContent = 'Start';
+    });
+
+    function resetGrid() {
+        if (gameInterval) {
+            clearInterval(gameInterval);
+            gameInterval = null;
+            gameStateButton.textContent = 'Start';
+        }
+        grid = createGridArray(gridSize);
+        updateDisplay();
+    }
+    
+
+    let clickCount = 0;
+
+    const updateClickCount = () => {
+        clickCount++;
+        // Update the click count display
+        document.getElementById('clickCountDisplay').textContent = `Clicks: ${clickCount}`;
+    };
+
+    // Reset click count
+    const resetClickCount = () => {
+        clickCount = 0;
+        document.getElementById('clickCountDisplay').textContent = `Clicks: ${clickCount}`;
+    };
+
+    let turnCount = 0;
+
+    const updateTurnCount = () => {
+        turnCount++;
+        document.getElementById('turnCountDisplay').textContent = `Turns: ${turnCount}`;
+    };
+
+    // Reset turn count
+    const resetTurnCount = () => {
+        turnCount = 0;
+        document.getElementById('turnCountDisplay').textContent = `Turns: ${turnCount}`;
+    };
+
+    function gridsAreSame(grid1, grid2) {
+        for (let x = 0; x < gridSize; x++) {
+            for (let y = 0; y < gridSize; y++) {
+                if (grid1[x][y] !== grid2[x][y]) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+    
 
 });
